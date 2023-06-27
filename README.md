@@ -1,1 +1,2 @@
-# Projeto utilizado para fins de estudos referente a API
+# API REST de Contatos
+Projeto utilizado para fins de estudo próprio referente a API 
