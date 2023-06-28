@@ -12,5 +12,3 @@ try {
 } catch (Exception $exception) {;
     echo $exception->getMessge();
 }
-
-var_dump($retorno);

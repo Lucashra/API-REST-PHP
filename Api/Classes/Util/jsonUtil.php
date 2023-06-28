@@ -6,7 +6,7 @@ use JsonException as JsonExceptionAlias;
 
 class JsonUtil 
 {
-    public static function tratarCorpoRequisição()
+    public static function tratarCorpoRequisiçãoJson()
     {
         try {
             $postJson = json_decode(file_get_contents('php://input'), true);
