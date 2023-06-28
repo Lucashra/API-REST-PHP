@@ -39,5 +39,6 @@ class RequestValidator
         if ($this->request['metodo'] !== self::GET && $this->request['metodo'] !== self::DELETE) {
                 $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
         }
+        $this->TokenAutorizadosRepository->validarToken(getallheaders()['Authorization']);
     }
 }

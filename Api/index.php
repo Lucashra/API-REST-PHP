@@ -1,6 +1,7 @@
 <?php 
 
 use Util\RotasUtil;
+use Util\ConstantesGenericasUtil as Constantes;
 use Validator\RequestValidator;
 
 include 'bootstrap.php';
@@ -10,5 +11,9 @@ try {
     $retorno = $RequestValidator->processarRequest(); 
 
 } catch (Exception $exception) {;
-    echo $exception->getMessge();
-}
+    echo json_encode([
+        Constantes::TIPO => Constantes::TIPO_ERRO,
+        Constantes::RESPOSTAL => utf8_encode($exception->getMessage())
+    ]);
+
+}   
