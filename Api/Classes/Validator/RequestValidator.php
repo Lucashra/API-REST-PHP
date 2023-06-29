@@ -17,6 +17,7 @@ class RequestValidator
 
     const GET = "GET";
     const DELETE = "DELETE";
+    const POST = "POST";
     const USUARIOS = 'USUARIOS';
 
     public function __construct($request)
@@ -79,4 +80,23 @@ class RequestValidator
         }
         return $retorno;
     }
+
+    private function post() 
+    {
+        $retorno = Constantes::MSG_ERRO_TIPO_ROTA;
+        if (in_array($this->request['rota'], Constantes::TIPO_POST, true)){
+            switch ($this->request['rota']) {
+                case self::USUARIOS:
+                    $usuariosService = new UsuariosService($this->request);
+                    $usuariosService->setDadosCorpoRequest($this->dadosRequest);
+                    $retorno = $usuariosService->validarPost();
+
+                    break;
+                default:
+                    throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
+            }
+        }
+        return $retorno;
+    }
+    
 }

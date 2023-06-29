@@ -11,10 +11,13 @@ class UsuariosService
     public const TABELA = 'usuarios';
     public const RECURSOS_GET = ['listar'];
     public const RECURSOS_DELETE = ['deletar'];
+    public const RECURSOS_POST = ['cadastrar'];
 
     private array $dados;
 
     private object $UsuariosRepository;
+
+    private array $dadosCorpoRequest = [];
 
     public function __construct($dados = [])
     {
@@ -60,6 +63,26 @@ class UsuariosService
         return $retorno;
     }
 
+    public function validarPost()
+    {
+        $retorno = null;
+        $recurso = $this->dados['recurso'];
+        if(in_array($recurso, self::RECURSOS_POST, true)) {
+            $retorno = $this->$recurso();
+        } else {
+            throw new \InvalidArgumentException(Constantes::MSG_ERRO_RECURSO_INEXISTENTE);
+        }
+        
+        if($retorno === null) {
+            throw new \InvalidArgumentException(Constantes::MSG_ERRO_GENERICO);
+        }
+
+        return $retorno;
+    }
+
+    public function setDadosCorpoRequest($dadosRequest) {
+        $this->dadosCorpoRequest = $dadosRequest;
+    }
 
     private function getOneByKey()
     {
@@ -74,6 +97,24 @@ class UsuariosService
     private function deletar()
     {
         return $this->UsuariosRepository->getMySQL()->delete(self::TABELA, $this->dados['id']);
+    }
+
+    private function cadastrar()
+    {
+        [$login, $senha] = [$this->dadosCorpoRequest['login'], $this->dadosCorpoRequest['senha']];
+
+        if ($login && $senha) {
+            if($this->UsuariosRepository->insertUser($login, $senha) > 0) {
+                $idInserido = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();
+                $this->UsuariosRepository->getMySQL()->getDb()->commit();
+                return ['id_inserido' => $idInserido];
+            }
+
+            $this->UsuariosRepository->getMySQL()->getDb()->rollBack();
+
+            throw new InvalidArgumentException(Constantes::MSG_ERRO_GENERICO);
+        }
+        throw new InvalidArgumentException(Constantess::MSG_ERRO_LOGIN_SENHA_OBRIGATORIO);
     }
 }
 

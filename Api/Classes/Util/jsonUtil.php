@@ -31,7 +31,7 @@ class JsonUtil
 
     }
 
-    public static function tratarCorpoRequisiçãoJson()
+    public static function tratarCorpoRequisicaoJson()
     {
         try {
             $postJson = json_decode(file_get_contents('php://input'), true);
