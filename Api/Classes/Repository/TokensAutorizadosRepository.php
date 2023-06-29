@@ -33,7 +33,6 @@ class TokensAutorizadosRepository
                 header('HTTP/1.1 401 Unauthorized');
                 throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TOKEN_NAO_AUTORIZADO);
             }
-            echo 'token Autorizado';
         } else {
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TOKEN_VAZIO);
         }

@@ -13,7 +13,7 @@ try {
 } catch (Exception $exception) {;
     echo json_encode([
         Constantes::TIPO => Constantes::TIPO_ERRO,
-        Constantes::RESPOSTAL => utf8_encode($exception->getMessage())
+        Constantes::RESPOSTA => $exception->getMessage
     ]);
 
 }   
