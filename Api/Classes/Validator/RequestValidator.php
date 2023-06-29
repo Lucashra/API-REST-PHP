@@ -99,4 +99,21 @@ class RequestValidator
         return $retorno;
     }
     
+    private function put()
+    {
+        $retorno = Constantes::MSG_ERRO_TIPO_ROTA;
+        if (in_array($this->request['rota'], Constantes::TIPO_PUT, true)){
+            switch ($this->request['rota']) {
+                case self::USUARIOS:
+                    $usuariosService = new UsuariosService($this->request);
+                    $usuariosService->setDadosCorpoRequest($this->dadosRequest);
+                    $retorno = $usuariosService->validarPut();
+
+                    break;
+                default:
+                    throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
+            }
+        }
+        return $retorno;
+    }
 }
