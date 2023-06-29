@@ -34,6 +34,7 @@ class RequestValidator
         if (in_array($this->request['metodo'], Constantes::TIPO_REQUEST, true)) {
             $retorno = $this->direcionarRequest();
         }
+        
         return $retorno;
     } 
 
@@ -56,7 +57,10 @@ class RequestValidator
                     $usuariosService = new UsuariosService($this->request);
                     $retorno = $usuariosService->validarGet();
                     break;
+                default:
+                    throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
             }
         }
+        return $retorno;
     }
 }
