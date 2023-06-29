@@ -15,10 +15,10 @@ try {
     $JsonUtil = new JsonUtil();
     $JsonUtil->processarArrayParaRetornar($retorno);
 
-} catch (Exception $exception) {;
+} catch (Exception $exception) {
     echo json_encode([
         Constantes::TIPO => Constantes::TIPO_ERRO,
-        Constantes::RESPOSTA => $exception->getMessage
+        Constantes::RESPOSTA => $exception->getMessage()
     ]);
 
 }   

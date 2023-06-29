@@ -63,4 +63,20 @@ class RequestValidator
         }
         return $retorno;
     }
+
+    private function delete() 
+    {
+        $retorno = Constantes::MSG_ERRO_TIPO_ROTA;
+        if (in_array($this->request['rota'], Constantes::TIPO_DELETE, true)){
+            switch ($this->request['rota']) {
+                case self::USUARIOS:
+                    $usuariosService = new UsuariosService($this->request);
+                    $retorno = $usuariosService->validarDelete();
+                    break;
+                default:
+                    throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
+            }
+        }
+        return $retorno;
+    }
 }
