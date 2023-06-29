@@ -7,6 +7,9 @@ use Util\ConstantesGenericasUtil;
 
 class TokensAutorizadosRepository
 {
+    /**
+     * @var object|MySQL
+     */
     private object $MySQL;
     public const TABELA = "tokens_autorizados";
     
@@ -19,7 +22,13 @@ class TokensAutorizadosRepository
     {
         $this->MySQL = new MySQL();
     }
-
+    
+    /**
+     * validarToken
+     *
+     * @param  mixed $token
+     * 
+     */
     public function validarToken($token)
     {
         $token = str_replace([' ', 'Bearer'], '', $token);
@@ -40,8 +49,8 @@ class TokensAutorizadosRepository
     
     /**
      * Retorna instancia da conexão
-     *
-     * @return void
+     * @return MySQL|object
+     * 
      */
     public function getMySQL()
     {

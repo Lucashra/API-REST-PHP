@@ -7,6 +7,9 @@ use DB\MySQL;
 
 class UsuariosRepository
 {
+    /**
+     * @var object|MySQL
+     */
     private object $MySQL;
     public const TABELA = "usuarios";
     
@@ -25,7 +28,7 @@ class UsuariosRepository
      *
      * @param  mixed $login
      * @param  mixed $senha
-     * @return void
+     * @return int
      */
     public function insertUser($login, $senha) {
         $consultaInsert = ' INSERT INTO ' . self::TABELA . ' (login,senha) VALUES (:login, :senha) ';
@@ -60,8 +63,8 @@ class UsuariosRepository
 
     /**
      * Retorna instancia da conexão
-     *
-     * @return void
+     * @return MySQL|object
+     * 
      */
     public function getMySQL()
     {

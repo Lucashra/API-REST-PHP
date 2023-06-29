@@ -7,7 +7,13 @@ use Util\ConstantesGenericasUtil as Constantes;
 use Util\FuncoesUtil as Util;
 
 class JsonUtil 
-{
+{    
+    /**
+     * processarArrayParaRetornar
+     *
+     * @param  mixed $retorno
+     * @return mixed
+     */
     public function processarArrayParaRetornar($retorno)
     {
         $dados = [];
