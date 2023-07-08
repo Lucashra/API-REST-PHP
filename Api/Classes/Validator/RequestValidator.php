@@ -4,9 +4,10 @@ namespace Validator;
 
 use Repository\TokensAutorizadosRepository;
 use Service\UsuariosService;
+use Service\ContatosService;
 use Util\ConstantesGenericasUtil as Constantes;
 use Util\JsonUtil;
-use Util\FuncoesUtil as  Util;
+use Util\FuncoesUtil as Util;
 
 
 class RequestValidator
@@ -19,11 +20,12 @@ class RequestValidator
     const DELETE = "DELETE";
     const POST = "POST";
     const USUARIOS = 'USUARIOS';
+    const CONTATOS = 'TB_CONTATO';
 
     public function __construct($request)
     {
         $this->request = $request;
-        $this->TokenAutorizadosRepository = new TokensAutorizadosRepository();
+        // $this->TokenAutorizadosRepository = new TokensAutorizadosRepository();
     }
 
     /**
@@ -33,9 +35,10 @@ class RequestValidator
     {
         $retorno = Constantes::MSG_ERRO_TIPO_ROTA;
         if (in_array($this->request['metodo'], Constantes::TIPO_REQUEST, true)) {
+            
             $retorno = $this->direcionarRequest();
+            // Util::print_rpre($retorno);
         }
-        
         return $retorno;
     } 
 
@@ -43,8 +46,8 @@ class RequestValidator
     {
         if ($this->request['metodo'] !== self::GET && $this->request['metodo'] !== self::DELETE) {
                 $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
-        }
-        $this->TokenAutorizadosRepository->validarToken(getallheaders()['Authorization']);
+            }
+            // $this->TokenAutorizadosRepository->validarToken(getallheaders()['Authorization']);
         $metodo = $this->request['metodo'];
         return $this->$metodo();
     }
@@ -57,6 +60,10 @@ class RequestValidator
                 case self::USUARIOS:
                     $usuariosService = new UsuariosService($this->request);
                     $retorno = $usuariosService->validarGet();
+                    break;
+                case self::CONTATOS:
+                    $contatosService = new ContatosService($this->request);
+                    $retorno = $contatosService->validarGet();
                     break;
                 default:
                     throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
@@ -74,6 +81,9 @@ class RequestValidator
                     $usuariosService = new UsuariosService($this->request);
                     $retorno = $usuariosService->validarDelete();
                     break;
+                case self::CONTATOS:
+                    $contatosService = new ContatosService($this->request);
+                    $retorno = $contatosService->validarGet();
                 default:
                     throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
             }
@@ -90,10 +100,14 @@ class RequestValidator
                     $usuariosService = new UsuariosService($this->request);
                     $usuariosService->setDadosCorpoRequest($this->dadosRequest);
                     $retorno = $usuariosService->validarPost();
-
                     break;
+                case self::CONTATOS:
+                    $contatosService = new ContatosService($this->request);
+                    $contatosService->setDadosCorpoRequest($this->dadosRequest);
+                    $retorno = $contatosService->validarPost();
+                break;
                 default:
-                    throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE);
+                    throw new \InvalidArgumentException(Constantes::MSG_ERRO_LOGIN_EXISTENTE) ;
             }
         }
         return $retorno;

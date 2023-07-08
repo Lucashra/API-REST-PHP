@@ -2,6 +2,7 @@
 
 namespace Util;
 
+use Util\FuncoesUtil as  Util;
 class RotasUtil
 {
     public static function getRotas()
@@ -13,7 +14,6 @@ class RotasUtil
        $request['recurso'] = $urls[3] ?? null;
        $request['id'] = filter_var($urls[4],);
        $request['metodo'] = $_SERVER['REQUEST_METHOD'];
-
        return $request;
     }
     
