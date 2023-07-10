@@ -8,6 +8,6 @@ abstract class FuncoesUtil
     {
         echo "<pre>";
         print_r($dado);
-        echo"</pre>";exit;
+        echo"</pre>";
     }
 }

@@ -10,7 +10,7 @@ class ContatosService
 {
     public const TABELA = 'tb_contato';
     public const RECURSOS_GET = ['listar'];
-    // public const RECURSOS_DELETE = ['deletar']; 
+    public const RECURSOS_DELETE = ['deletar']; 
     public const RECURSOS_POST = ['cadastrar'];
     // public const RECURSOS_PUT = ['atualizar'];
 
@@ -132,7 +132,7 @@ class ContatosService
 
     private function deletar()
     {
-        return $this->ContatosRepository->getMySQL()->delete(self::TABELA, $this->dados['id']);
+        return $this->ContatosRepository->delete($this->dados['id']);
     }
 
     private function cadastrar()
@@ -182,7 +182,7 @@ class ContatosService
      */
     private function validarRetornoRequest($retorno):void
     {
-        if ($retorno === null) {
+        if ($retorno == null) {
             throw new \InvalidArgumentException(Constantes::MSG_ERRO_GENERICO);
         }
     }

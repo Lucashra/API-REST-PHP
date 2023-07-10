@@ -93,6 +93,7 @@ class ContatosRepository
             $idPessoa = $queryPessoa->lastInsertId();
             $retorno = $stmt->rowCount();
             $queryPessoa->commit();
+
             /** Gravando dados na tebela de contatos */
             $sql = ' INSERT INTO '. self::TB_CONTATO . ' (ct_ps_id, ct_telefone, ct_email, ct_whatsapp) ';
             $sql .= 'VALUES (:ct_ps_id, :ct_telefone, :ct_email, :ct_whatsapp) ;';
@@ -111,6 +112,30 @@ class ContatosRepository
             $e->getMessage();
         }
         return $retorno;
+    }
+
+      /**
+     * @param $tabela
+     * @param $id
+     * @return string
+     */
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM tb_pessoa WHERE ps_id = :id';
+        if ($id) {
+            $query = $this->getMySQL()->getDb();
+            $query->beginTransaction();
+            $stmt = $query->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $query->commit();
+                return Constantes::MSG_DELETADO_SUCESSO;
+            }
+            $query->rollBack();
+            throw new \InvalidArgumentException(Constantes::MSG_ERRO_SEM_RETORNO);
+        }
+        throw new \InvalidArgumentException(Constantes::MSG_ERRO_GENERICO);
     }
 
     
