@@ -122,7 +122,11 @@ class RequestValidator
                     $usuariosService = new UsuariosService($this->request);
                     $usuariosService->setDadosCorpoRequest($this->dadosRequest);
                     $retorno = $usuariosService->validarPut();
-
+                    break;
+                case self::CONTATO:
+                    $contatosService = new ContatosService($this->request);
+                    $contatosService->setDadosCorpoRequest($this->dadosRequest);
+                    $retorno = $contatosService->validarPut();
                     break;
                 default:
                     throw new \InvalidArgumentException(Constantes::MSG_ERRO_TIPO_ROTA);

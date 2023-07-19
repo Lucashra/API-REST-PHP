@@ -3,6 +3,7 @@
 namespace Repository;
 
 use DB\MySQL;
+use PDO;
 use Util\ConstantesGenericasUtil as Constantes;
 use Util\FuncoesUtil as Util;
 
@@ -34,6 +35,7 @@ class ContatosRepository
      */
     public function getContatos($idContato = null)
     {
+          
         $sql =  'SELECT ';
         $sql .= '   ct_id, ';
         $sql .= '   ct_ps_id, ';
@@ -59,11 +61,11 @@ class ContatosRepository
         }
         $stmt->execute();
         $registros = $stmt->fetchAll($query::FETCH_ASSOC);
-        
+      
         if (is_array($registros) && count($registros) > 0) {
             return $registros;
         }
-            
+        
         throw new \InvalidArgumentException(Constantes::MSG_ERRO_SEM_RETORNO);
     }
         
@@ -140,22 +142,48 @@ class ContatosRepository
 
     
     /**
+     * 
      * updateUser
      *
      * @param  mixed $id
      * @param  mixed $dados
      * @return int
      */
-    public function updateUser($id, $dados) {
-        $consultaUpdate = ' UPDATE ' . self::TB_CONTATO . ' SET login = :login, senha = :senha WHERE id = :id';
-        $this->MySQL->getDb()->beginTransaction();
-        $stmt = $this->MySQL->getDb()->prepare($consultaUpdate);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':login', $dados['login']);
-        $stmt->bindParam(':senha', $dados['senha']);
+    public function updateUser($id_pessoa, $nome = null, $cpf = null, $dt_nascimento = null) {
+        if ($id_pessoa && $nome || $cpf || $dt_nascimento) {
+            $sqlPessoa  = "UPDATE ";
+            $sqlPessoa .=       self::TB_PESSOA ;
+            $sqlPessoa .= " SET ";
+            $sqlPessoa .= $nome ? "  ps_nome = :nome " : " ";
+            $sqlPessoa .= $nome && $cpf ? ", " : " " ;   
+            $sqlPessoa .= $cpf ?  " ps_cpf = :cpf " : " ";
+            $sqlPessoa .= $cpf && $dt_nascimento ? ", " : " ";          
+            $sqlPessoa .= $dt_nascimento ? " ps_dt_nascimento = :dt_nascimento " : " ";
+            $sqlPessoa .= "WHERE ";
+            $sqlPessoa .= "     ps_id = :id_pessoa ";
+        } else {
+            return 0;
+        }
+        
+        $queryPessoa = $this->getMySQL()->getDb();
+        $queryPessoa->beginTransaction();      
+        $stmt = $queryPessoa->prepare($sqlPessoa);
+        $stmt->bindParam(':id_pessoa', $id_pessoa, PDO::PARAM_INT);
+        
+        if ($nome) {
+            $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+        }
+
+        if ($cpf) {
+            $stmt->bindParam(':cpf', $cpf);
+        }
+
+        if ($dt_nascimento) {
+            $stmt->bindParam(':dt_nascimento', $dt_nascimento);
+        }
+
         $stmt->execute();
         return $stmt->rowCount();
-
     }
 
     /**

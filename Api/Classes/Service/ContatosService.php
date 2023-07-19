@@ -12,7 +12,7 @@ class ContatosService
     public const RECURSOS_GET = ['listar'];
     public const RECURSOS_DELETE = ['deletar']; 
     public const RECURSOS_POST = ['cadastrar'];
-    // public const RECURSOS_PUT = ['atualizar'];
+    public const RECURSOS_PUT = ['atualizar'];
 
     /**
      * @var array
@@ -83,10 +83,12 @@ class ContatosService
      */
     public function validarPut()
     {
+        
         $retorno = null;
         $recurso = $this->dados['recurso'];
         if(in_array($recurso, self::RECURSOS_PUT, true)) {
-           $retorno = $this->validarIdObrigatório($recurso);
+            $retorno = $this->validarIdObrigatório($recurso);
+            
         } else {
             throw new \InvalidArgumentException(Constantes::MSG_ERRO_RECURSO_INEXISTENTE);
         }
@@ -129,12 +131,22 @@ class ContatosService
     {
         return $this->ContatosRepository->getContatos();
     }
-
+    
+    /**
+     * deletar
+     *
+     * @return string
+     */
     private function deletar()
     {
         return $this->ContatosRepository->delete($this->dados['id']);
     }
-
+    
+    /**
+     * cadastra contatos
+     *
+     * @return int
+     */
     private function cadastrar()
     {
 
@@ -168,7 +180,11 @@ class ContatosService
 
     private function atualizar()
     {
-        if ($this->ContatosRepository->updateUser($this->dados['id'], $this->dadosCorpoRequest) > 0) {
+        if ($this->ContatosRepository->updateUser((int)$this->dadosCorpoRequest['id'], 
+                                                  $this->dadosCorpoRequest['ps_nome'], 
+                                                  $this->dadosCorpoRequest['ps_cpf'], 
+                                                  $this->dadosCorpoRequest['ps_dt_nascimento'] ) > 0) {
+
             $this->ContatosRepository->getMySQL()->getDb()->commit();
             return Constantes::MSG_ATUALIZADO_SUCESSO;
         }
@@ -189,6 +205,7 @@ class ContatosService
 
     private function validarIdObrigatório($recurso)
     {
+        
         if($this->dados['id'] > 0 ) {
             $retorno = $this->$recurso();
         }else {
